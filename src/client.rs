@@ -73,11 +73,7 @@ impl<S: Read + Write> Client<S> {
     // Playback options & status {{{
     /// Get MPD status
     pub fn status(&mut self) -> Result<Status> {
-        self.run_command("command_list_begin", ())
-            .and_then(|_| self.run_command("status", ()))
-            .and_then(|_| self.run_command("replay_gain_status", ()))
-            .and_then(|_| self.run_command("command_list_end", ()))
-            .and_then(|_| self.read_struct())
+        self.run_command("status", ()).and_then(|_| self.read_struct())
     }
 
     /// Get MPD playing statistics
