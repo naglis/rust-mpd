@@ -184,6 +184,13 @@ impl<S: Read + Write> Client<S> {
     pub fn rewind<T: ToSeconds>(&mut self, pos: T) -> Result<()> {
         self.run_command("seekcur", pos.to_seconds()).and_then(|_| self.expect_ok())
     }
+
+    /// Seek a given amount of seconds in the current song relative to the current position
+    pub fn rewind_relative<T: ToSeconds>(&mut self, amount: T) -> Result<()> {
+        let amount = amount.to_seconds();
+        let prefix = if amount.is_sign_negative() { "-" } else { "+" };
+        self.run_command("seekcur", format!("{}{}", prefix, amount.abs())).and_then(|_| self.expect_ok())
+    }
     // }}}
 
     // Queue control {{{
